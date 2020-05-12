@@ -25,10 +25,7 @@ def get_callback_payload(event_type):
     return json.dumps(payload)
 
 
-def tacosandburritos_train(
-    resource_group,
-    workspace
-):
+def tacosandburritos_train():
     """Pipeline steps"""
 
     persistent_volume_path = '/mnt/azure'
