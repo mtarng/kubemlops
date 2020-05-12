@@ -37,10 +37,10 @@ jobs:
         run: |
           git fetch origin ${{ env.event_sha }}
           git checkout FETCH_HEAD
-      - uses: TrueBrain/actions-flake8@master
-        if: "true"
-        with:
-          path: code
+      # - uses: TrueBrain/actions-flake8@master
+      #   if: "true"
+      #   with:
+      #     path: code
 
   build_images:
     runs-on: ubuntu-latest
