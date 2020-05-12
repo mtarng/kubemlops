@@ -6,7 +6,7 @@ name: CI
 #  - PR comment "/build-pipeline" (code_quality_checks + build kfp pipeline)
 on:
   push:
-    branches: [master]
+    branches: [sudivate-no-params]
   pull_request:
     branches: [master]
   issue_comment:

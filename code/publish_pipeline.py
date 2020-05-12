@@ -71,7 +71,7 @@ def main():
         # We upload a new pipline every time with a run_id in the pipeline name
         # until the issue with uploading a pipeline version is resolved
         # see  https://github.com/kubeflow/pipelines/issues/3442
-        pipeline = client.pipeline_uploads.upload_pipeline(pipeline_file, name=pipeline_name)  # noqa: E501
+        pipeline = client.pipeline_uploads.upload_pipeline(pipeline_file, name="test_no_param")  # noqa: E501
         return pipeline.id
 
     except TypeError as err:

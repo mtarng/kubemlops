@@ -77,77 +77,77 @@ def tacosandburritos_train(
             ]
         )
 
-        # train
-        operations['training'] = dsl.ContainerOp(
-            name='training',
-            image=image_repo_name + '/training:latest',
-            command=['python'],
-            arguments=[
-                '/scripts/train.py',
-                '--base_path', persistent_volume_path,
-                '--data', training_folder,
-                '--epochs', epochs,
-                '--batch', batch,
-                '--image_size', image_size,
-                '--lr', learning_rate,
-                '--outputs', model_folder,
-                '--dataset', training_dataset
-            ],
-            output_artifact_paths={    # change output_artifact_paths to file_outputs after this PR is merged https://github.com/kubeflow/pipelines/pull/2334 # noqa: E501
-                'mlpipeline-metrics': '/mlpipeline-metrics.json',
-                'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
-            }
-        )
-        operations['training'].after(operations['preprocess'])
+        # # train
+        # operations['training'] = dsl.ContainerOp(
+        #     name='training',
+        #     image=image_repo_name + '/training:latest',
+        #     command=['python'],
+        #     arguments=[
+        #         '/scripts/train.py',
+        #         '--base_path', persistent_volume_path,
+        #         '--data', training_folder,
+        #         '--epochs', epochs,
+        #         '--batch', batch,
+        #         '--image_size', image_size,
+        #         '--lr', learning_rate,
+        #         '--outputs', model_folder,
+        #         '--dataset', training_dataset
+        #     ],
+        #     output_artifact_paths={    # change output_artifact_paths to file_outputs after this PR is merged https://github.com/kubeflow/pipelines/pull/2334 # noqa: E501
+        #         'mlpipeline-metrics': '/mlpipeline-metrics.json',
+        #         'mlpipeline-ui-metadata': '/mlpipeline-ui-metadata.json'
+        #     }
+        # )
+        # operations['training'].after(operations['preprocess'])
 
-        # register kubeflow artifcats model
-        operations['registerkfartifacts'] = dsl.ContainerOp(
-            name='registerartifacts',
-            image=image_repo_name + '/registerartifacts:latest',
-            command=['python'],
-            arguments=[
-                '/scripts/registerartifacts.py',
-                '--base_path', persistent_volume_path,
-                '--model', 'latest.h5',
-                '--model_name', model_name,
-                '--data', training_folder,
-                '--dataset', training_dataset,
-                '--run_id', dsl.RUN_ID_PLACEHOLDER
-            ]
-        ).apply(use_azure_secret())
-        operations['registerkfartifacts'].after(operations['training'])
+        # # register kubeflow artifcats model
+        # operations['registerkfartifacts'] = dsl.ContainerOp(
+        #     name='registerartifacts',
+        #     image=image_repo_name + '/registerartifacts:latest',
+        #     command=['python'],
+        #     arguments=[
+        #         '/scripts/registerartifacts.py',
+        #         '--base_path', persistent_volume_path,
+        #         '--model', 'latest.h5',
+        #         '--model_name', model_name,
+        #         '--data', training_folder,
+        #         '--dataset', training_dataset,
+        #         '--run_id', dsl.RUN_ID_PLACEHOLDER
+        #     ]
+        # ).apply(use_azure_secret())
+        # operations['registerkfartifacts'].after(operations['training'])
 
-        # register model
-        operations['register'] = dsl.ContainerOp(
-            name='register',
-            image=image_repo_name + '/register:latest',
-            command=['python'],
-            arguments=[
-                '/scripts/register.py',
-                '--base_path', persistent_volume_path,
-                '--model', 'latest.h5',
-                '--model_name', model_name,
-                '--tenant_id', "$(AZ_TENANT_ID)",
-                '--service_principal_id', "$(AZ_CLIENT_ID)",
-                '--service_principal_password', "$(AZ_CLIENT_SECRET)",
-                '--subscription_id', "$(AZ_SUBSCRIPTION_ID)",
-                '--resource_group', resource_group,
-                '--workspace', workspace,
-                '--run_id', dsl.RUN_ID_PLACEHOLDER
-            ]
-        ).apply(use_azure_secret())
-        operations['register'].after(operations['registerkfartifacts'])
+        # # register model
+        # operations['register'] = dsl.ContainerOp(
+        #     name='register',
+        #     image=image_repo_name + '/register:latest',
+        #     command=['python'],
+        #     arguments=[
+        #         '/scripts/register.py',
+        #         '--base_path', persistent_volume_path,
+        #         '--model', 'latest.h5',
+        #         '--model_name', model_name,
+        #         '--tenant_id', "$(AZ_TENANT_ID)",
+        #         '--service_principal_id', "$(AZ_CLIENT_ID)",
+        #         '--service_principal_password', "$(AZ_CLIENT_SECRET)",
+        #         '--subscription_id', "$(AZ_SUBSCRIPTION_ID)",
+        #         '--resource_group', resource_group,
+        #         '--workspace', workspace,
+        #         '--run_id', dsl.RUN_ID_PLACEHOLDER
+        #     ]
+        # ).apply(use_azure_secret())
+        # operations['register'].after(operations['registerkfartifacts'])
 
-        operations['finalize'] = dsl.ContainerOp(
-            name='Finalize',
-            image="curlimages/curl",
-            command=['curl'],
-            arguments=[
-                '-d', get_callback_payload("Model is registered"),
-                callback_url
-            ]
-        )
-        operations['finalize'].after(operations['register'])
+        # operations['finalize'] = dsl.ContainerOp(
+        #     name='Finalize',
+        #     image="curlimages/curl",
+        #     command=['curl'],
+        #     arguments=[
+        #         '-d', get_callback_payload("Model is registered"),
+        #         callback_url
+        #     ]
+        # )
+        # operations['finalize'].after(operations['register'])
 
     # operations['deploy'] = dsl.ContainerOp(
     #     name='deploy',

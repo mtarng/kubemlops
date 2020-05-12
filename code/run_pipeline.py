@@ -82,7 +82,6 @@ def main():
     exp = client.get_experiment(experiment_name=args.experiment_name)  # noqa: E501
     client.run_pipeline(exp.id,
                         job_name=args.run_name,
-                        params=pipeline_params,
                         pipeline_id=args.pipeline_id)
 
 
