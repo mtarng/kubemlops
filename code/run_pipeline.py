@@ -75,9 +75,9 @@ def main():
     token = get_access_token(args.tenant, args.service_principal, args.sp_secret)  # noqa: E501
     client = kfp.Client(host=args.kfp_host, existing_token=token)
 
-    pipeline_params = {}
-    pipeline_params["resource_group"] = args.resource_group
-    pipeline_params["workspace"] = args.workspace
+    # pipeline_params = {}
+    # pipeline_params["resource_group"] = args.resource_group
+    # pipeline_params["workspace"] = args.workspace
     token = get_access_token(args.tenant, args.service_principal, args.sp_secret)  # noqa: E501
     exp = client.get_experiment(experiment_name=args.experiment_name)  # noqa: E501
     client.run_pipeline(exp.id,
